@@ -1,0 +1,36 @@
+# ==========================================
+# Entornos Virtuales
+# ==========================================
+venv/
+env/
+ENV/
+
+# ==========================================
+# Archivos de Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ==========================================
+# Variables de Entorno y Secretos (¡MUY IMPORTANTE!)
+# ==========================================
+.env
+*.env
+.env.local
+
+# ==========================================
+# Base de datos local y Archivos multimedia
+# ==========================================
+db.sqlite3
+media/
+media_root/
+
+# ==========================================
+# Configuraciones del Editor (VS Code, etc)
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.DS_Store
