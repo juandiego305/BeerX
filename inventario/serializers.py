@@ -38,6 +38,14 @@ class MovimientoSerializer(serializers.ModelSerializer):
         tipo = data.get('tipo_movimiento')
         cantidad_solicitada = data.get('cantidad')
         producto = data.get('producto')
+        request = self.context.get('request')
+        usuario = getattr(request, 'user', None)
+        es_admin = bool(usuario and usuario.is_authenticated and usuario.rol and usuario.rol.nombre.upper() == 'ADMIN')
+
+        if not es_admin and tipo != 'SALIDA':
+            raise serializers.ValidationError({
+                'tipo_movimiento': 'El usuario empleado solo puede registrar ventas tipo SALIDA.'
+            })
 
         if tipo == 'SALIDA':
             # Consultamos la vista de stock actual en Neon

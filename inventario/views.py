@@ -12,7 +12,7 @@ from .serializers import (
 )
 
 # Importamos los permisos personalizados que creamos
-from usuarios.permissions import EsAdministrador, EsAdminOReadOnly
+from usuarios.permissions import EsAdministrador, EsAdminOReadOnly, EsAdminOEmpleadoVentas
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -68,6 +68,12 @@ class MovimientoViewSet(viewsets.ModelViewSet):
     serializer_class = MovimientoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_permissions(self):
+        if self.action == 'create':
+            return [EsAdminOEmpleadoVentas()]
+
+        return [EsAdministrador()]
+
     # Aseguramos que el guardado se ejecute correctamente. 
     # La validación de stock y asignación de usuario están en el Serializador.
     def perform_create(self, serializer):
@@ -82,4 +88,4 @@ class StockActualViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = StockActual.objects.all()
     serializer_class = StockActualSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [EsAdministrador]

@@ -6,7 +6,6 @@ router = DefaultRouter()
 router.register(r'categorias', CategoriaViewSet)
 router.register(r'productos', ProductoViewSet)
 router.register(r'movimientos', MovimientoViewSet)
-# Nuestra ruta estrella para las métricas
 router.register(r'dashboard/stock', StockActualViewSet, basename='dashboard-stock')
 
 urlpatterns = [
