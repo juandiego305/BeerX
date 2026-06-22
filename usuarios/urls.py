@@ -2,12 +2,12 @@ from django.urls import path
 from .views import RegistrarUsuarioView, ListaUsuariosView, ModificarUsuarioView
 
 urlpatterns = [
-    # Ruta POST: http://127.0.0.1:8000/usuarios/register/ (Crear)
+    # Ruta POST (Crear)
     path('register/', RegistrarUsuarioView.as_view(), name='auth_register'),
     
-    # Ruta GET: http://127.0.0.1:8000/usuarios/api/ (Listar)
+    # Ruta GET (Listar)
     path('api/', ListaUsuariosView.as_view(), name='listar_usuarios'),
     
-    # Ruta PATCH/PUT/GET: http://127.0.0.1:8000/usuarios/api/1/ (Modificar o desactivar)
-    path('api/<int:pk>/', ModificarUsuarioView.as_view(), name='modificar_usuario'),
+    # ¡AQUÍ ESTÁ EL CAMBIO! Cambiamos <int:pk> por <str:pk>
+    path('api/<str:pk>/', ModificarUsuarioView.as_view(), name='modificar_usuario'),
 ]
