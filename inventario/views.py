@@ -62,16 +62,22 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class MovimientoViewSet(viewsets.ModelViewSet):
     """
     Gestión de entradas y salidas de inventario.
-    Seguridad: Cualquier usuario logueado (Admin o Empleado) puede registrar movimientos.
+    Seguridad: Cualquier usuario logueado (Admin o Empleado) puede ver y registrar movimientos.
     """
     queryset = MovimientosInventario.objects.all().order_by('-fecha_movimiento')
     serializer_class = MovimientoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_permissions(self):
+        # Permite crear ventas al Admin y al Empleado
         if self.action == 'create':
             return [EsAdminOEmpleadoVentas()]
+        
+        # CORRECCIÓN: Permite al empleado listar los movimientos para que React pueda leerlos
+        if self.action in ['list', 'retrieve']:
+            return [permissions.IsAuthenticated()]
 
+        # Cualquier otra acción destructiva (editar/borrar movimientos) solo para Admin
         return [EsAdministrador()]
 
     # Aseguramos que el guardado se ejecute correctamente. 
@@ -88,4 +94,7 @@ class StockActualViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = StockActual.objects.all()
     serializer_class = StockActualSerializer
+    
+    # CORRECCIÓN CLAVE: Cambiamos de EsAdministrador a IsAuthenticated 
+    # para que el empleado pueda leer el stock en su pantalla de ventas.
     permission_classes = [permissions.IsAuthenticated]
