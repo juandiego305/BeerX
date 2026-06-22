@@ -71,7 +71,7 @@ class MovimientoViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         # Permite crear ventas al Admin y al Empleado
         if self.action == 'create':
-            return [EsAdminOEmpleadoVentas()]
+            return [permissions.IsAuthenticated()]
         
         # CORRECCIÓN: Permite al empleado listar los movimientos para que React pueda leerlos
         if self.action in ['list', 'retrieve']:
