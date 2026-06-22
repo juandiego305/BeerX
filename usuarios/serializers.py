@@ -4,9 +4,11 @@ from .models import Usuario, Rol
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'rol']
+        # 1. Agregamos 'is_active' al final para que React pueda leer y cambiar el estado
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'rol', 'is_active']
         extra_kwargs = {
-            'password': {'write_only': True} # La contraseña no se envía de vuelta por seguridad
+            # 2. Le agregamos 'required': False para poder hacer PATCH sin enviar contraseña obligatoria
+            'password': {'write_only': True, 'required': False} 
         }
 
     def create(self, validated_data):
@@ -18,3 +20,19 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+    # 3. Agregamos el método update para manejar las ediciones desde el panel
+    def update(self, instance, validated_data):
+        # Extraemos la contraseña (si viene, bien; si no, queda como None)
+        password = validated_data.pop('password', None)
+        
+        # Actualizamos todos los demás campos (nombre, email, rol, is_active, etc.)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+            
+        # Si el administrador escribió una nueva contraseña en React, la encriptamos
+        if password:
+            instance.set_password(password)
+            
+        instance.save()
+        return instance
