@@ -88,4 +88,4 @@ class StockActualViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = StockActual.objects.all()
     serializer_class = StockActualSerializer
-    permission_classes = [EsAdministrador]
+    permission_classes = [permissions.IsAuthenticated]
